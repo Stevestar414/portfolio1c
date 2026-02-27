@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abror | 1C Developer</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#home" class="logo">Abror<span>.1C</span></a>
+        
+        <div class="nav-menu">
+            <ul class="nav-links">
+                <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="#skills" data-i18n="nav_skills">Skills</a></li>
+                <li><a href="#work" data-i18n="nav_work">Work</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+            </ul>
+            
+            <!-- Language Switcher -->
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
+                <button class="lang-btn" onclick="setLanguage('uz')">UZ</button>
+            </div>
+        </div>
+
+        <!-- Mobile Hamburger Icon -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home">
+        <div class="hero-text reveal">
+            <h2>&lt;Hello World /&gt;</h2>
+            <h1><span data-i18n="hero_im">I'm</span> <span>Abror</span></h1>
+            
+            <!-- Interactive Typing Text -->
+            <div class="typing-container">
+                <span id="typing-text"></span><span class="typing-cursor">|</span>
+            </div>
+
+            <p data-i18n="hero_desc">A professional 1C Developer specializing in enterprise automation, complex queries, and business system integrations.</p>
+            <br>
+            <a href="#contact" class="btn" data-i18n="btn_contact">Let's Talk</a>
+        </div>
+        
+        <!-- Interactive 3D Hover Element -->
+        <div class="hero-visual reveal">
+            <div class="interactive-card" id="tilt-card">
+                <i class="fa-solid fa-database"></i>
+                <span data-i18n="hero_code_text">1C:Enterprise 8.3</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <h2 class="section-title reveal" data-i18n="title_about">About Me</h2>
+        <div class="about-grid">
+            <div class="reveal">
+                <h3 style="margin-bottom: 15px; font-size: 1.8rem;" data-i18n="about_h3">Respectful & Structured Development</h3>
+                <p data-i18n="about_p1">I specialize in the 1C:Enterprise platform. My goal is to help businesses optimize their accounting, management, and operational processes through clean, efficient, and reliable code.</p>
+                <br>
+                <p data-i18n="about_p2">I approach every project with deep respect for the client's business logic. Whether writing complex queries using DCS (СКД), developing extensions, or integrating with third-party web services, I prioritize stability.</p>
+                
+                <div class="about-stats">
+                    <div class="stat-box">
+                        <h3>5+</h3>
+                        <p data-i18n="stat_exp">Years Experience</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>30+</h3>
+                        <p data-i18n="stat_proj">Projects Completed</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Code Card -->
+            <div class="reveal code-block">
+                <div style="color: #F56565; margin-bottom: 10px;">// My Core Philosophy</div>
+                <div><span style="color: #D69E2E;">Функция</span> <span style="color: #63B3ED;">SolveBusinessProblem</span>(ClientNeeds)</div>
+                <div style="margin-left: 20px; margin-top: 10px;">
+                    <span style="color: #D69E2E;">Если</span> ClientNeeds.IsComplex <span style="color: #D69E2E;">Тогда</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;AnalyzeLogic();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;WriteCleanCode();<br>
+                    <span style="color: #D69E2E;">КонецЕсли</span>;<br><br>
+                    <span style="color: #D69E2E;">Возврат</span> "Stable System & Happy Client";
+                </div>
+                <div><span style="color: #D69E2E;">КонецФункции</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills">
+        <h2 class="section-title reveal" data-i18n="title_skills">Core Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card reveal">
+                <div class="skill-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3 data-i18n="skill_1_title">1C Architecture</h3>
+                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_1_desc">Designing databases, building custom configurations from scratch, and modifying existing systems.</p>
+            </div>
+            <div class="skill-card reveal">
+                <div class="skill-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3 data-i18n="skill_2_title">DCS (СКД) & Reports</h3>
+                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_2_desc">Writing highly optimized queries and creating complex analytical reports.</p>
+            </div>
+            <div class="skill-card reveal">
+                <div class="skill-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <h3 data-i18n="skill_3_title">API & Integrations</h3>
+                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_3_desc">Connecting 1C with websites, Telegram bots, CRM systems via REST API and OData.</p>
+            </div>
+            <div class="skill-card reveal">
+                <div class="skill-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                <h3 data-i18n="skill_4_title">Extensions</h3>
+                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_4_desc">Safely modifying standard 1C behaviors without altering the core configuration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORK SECTION -->
+    <section id="work">
+        <h2 class="section-title reveal" data-i18n="title_work">Recent Projects</h2>
+        <div class="work-grid">
+            <div class="work-card reveal">
+                <div class="work-img"><i class="fa-solid fa-store"></i></div>
+                <div class="work-content">
+                    <h3 data-i18n="proj_1_title">E-commerce Integration</h3>
+                    <p data-i18n="proj_1_desc">Developed a REST API to synchronize 1C:Trade Management with WooCommerce.</p>
+                    <div class="work-tags">
+                        <span class="tag">HTTP-Services</span> <span class="tag">JSON</span>
+                    </div>
+                </div>
+            </div>
+            <div class="work-card reveal">
+                <div class="work-img"><i class="fa-solid fa-industry"></i></div>
+                <div class="work-content">
+                    <h3 data-i18n="proj_2_title">Manufacturing Module</h3>
+                    <p data-i18n="proj_2_desc">Created an extension for calculating raw material costs and automating production stages.</p>
+                    <div class="work-tags">
+                        <span class="tag">Extensions</span> <span class="tag">СКД</span>
+                    </div>
+                </div>
+            </div>
+            <div class="work-card reveal">
+                <div class="work-img"><i class="fa-brands fa-telegram"></i></div>
+                <div class="work-content">
+                    <h3 data-i18n="proj_3_title">Telegram Bot Interface</h3>
+                    <p data-i18n="proj_3_desc">Built a Telegram bot integrated directly with a 1C database for remote approvals.</p>
+                    <div class="work-tags">
+                        <span class="tag">Telegram API</span> <span class="tag">Webhooks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <h2 class="section-title reveal" data-i18n="title_contact">Get In Touch</h2>
+        <div class="contact-box reveal">
+            <h3 style="margin-bottom: 15px;" data-i18n="contact_h3">Ready to optimize your business?</h3>
+            <p data-i18n="contact_p">I am always open to discussing new projects, database architectures, or integration ideas.</p>
+            
+            <div class="social-links">
+                <a href="mailto:your-email@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                <a href="https://t.me/your_telegram" title="Telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://github.com/your_github" title="GitHub" target="_blank"><i class="fa-brands fa-github"></i></a>
+                <a href="tel:+998901234567" title="Phone"><i class="fa-solid fa-phone"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Abror | <span data-i18n="footer_text">Professional 1C Developer</span></p>
+    </footer>
+
+    <!-- =======================================================
+         JAVASCRIPT LOGIC
+    ======================================================== -->
+    <script>
+        /* --- 1. MOBILE MENU LOGIC --- */
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        // Toggle menu
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when a link or language button is clicked
+        const closeMenu = () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        };
+        navLinks.forEach(link => link.addEventListener('click', closeMenu));
+        langBtns.forEach(btn => btn.addEventListener('click', closeMenu));
+
+
+        /* --- 2. FIXED 3D TILT EFFECT --- */
+        const tiltCard = document.getElementById('tilt-card');
+        
+        document.addEventListener('mousemove', (e) => {
+            // Stop animating if user scrolled past the hero section (saves performance)
+            if (window.scrollY > 800) return; 
+            
+            // CORRECT MATH: If mouse is on right, rotation should be positive. If mouse is at bottom, rotation should be negative.
+            let xAxis = (e.clientX - window.innerWidth / 2) / 20; 
+            let yAxis = (window.innerHeight / 2 - e.clientY) / 20; 
+            
+            tiltCard.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        
+        // Reset tilt gently when mouse leaves the window
+        document.addEventListener('mouseleave', () => {
+            tiltCard.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+
+        /* --- 3. SCROLL REVEAL ANIMATION --- */
+        function revealElements() {
+            const reveals = document.querySelectorAll(".reveal");
+            const windowHeight = window.innerHeight;
+
+            reveals.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add("active");
+                }
+            });
+        }
+        window.addEventListener("scroll", revealElements);
+        revealElements(); // Trigger immediately on load
+
+
+        /* --- 4. LANGUAGE DICTIONARY & LOGIC --- */
+        const translations = {
+            en: {
+                nav_home: "Home", nav_about: "About", nav_skills: "Skills", nav_work: "Work", nav_contact: "Contact",
+                hero_subtitle: "&lt;Hello World /&gt;", hero_im: "I'm", 
+                hero_desc: "A professional 1C Developer specializing in enterprise automation, complex queries, and business system integrations.",
+                btn_contact: "Let's Talk", hero_code_text: "1C:Enterprise 8.3",
+                title_about: "About Me", about_h3: "Respectful & Structured Development",
+                about_p1: "I specialize in the 1C:Enterprise platform. My goal is to help businesses optimize their accounting, management, and operational processes through clean, efficient, and reliable code.",
+                about_p2: "I approach every project with deep respect for the client's business logic. Whether writing complex queries using DCS (СКД), developing extensions, or integrating with third-party web services, I prioritize stability.",
+                stat_exp: "Years Experience", stat_proj: "Projects Completed",
+                title_skills: "Core Skills",
+                skill_1_title: "1C Architecture", skill_1_desc: "Designing databases, building custom configurations, and modifying existing systems.",
+                skill_2_title: "DCS (СКД) & Reports", skill_2_desc: "Writing highly optimized queries and creating complex analytical reports.",
+                skill_3_title: "API & Integrations", skill_3_desc: "Connecting 1C with websites, CRM systems, and external databases via REST API and OData.",
+                skill_4_title: "Extensions", skill_4_desc: "Safely modifying standard 1C behaviors without altering the core configuration.",
+                title_work: "Recent Projects",
+                proj_1_title: "E-commerce Integration", proj_1_desc: "Developed a REST API to synchronize 1C:Trade Management with WooCommerce.",
+                proj_2_title: "Manufacturing Module", proj_2_desc: "Created an extension for calculating raw material costs and automating production stages.",
+                proj_3_title: "Telegram Bot Interface", proj_3_desc: "Built a Telegram bot integrated with a 1C database, allowing managers to approve invoices remotely.",
+                title_contact: "Get In Touch", contact_h3: "Ready to optimize your business?",
+                contact_p: "I am always open to discussing new projects, database architectures, or integration ideas.",
+                footer_text: "Professional 1C Developer"
+            },
+            ru: {
+                nav_home: "Главная", nav_about: "Обо мне", nav_skills: "Навыки", nav_work: "Проекты", nav_contact: "Контакты",
+                hero_subtitle: "&lt;Привет Мир /&gt;", hero_im: "Я", 
+                hero_desc: "Профессиональный программист 1С. Специализируюсь на автоматизации бизнеса, сложных запросах и интеграциях.",
+                btn_contact: "Связаться", hero_code_text: "1С:Предприятие 8.3",
+                title_about: "Обо мне", about_h3: "Ответственная и структурированная разработка",
+                about_p1: "Я специализируюсь на платформе 1С:Предприятие. Моя цель — помочь бизнесу оптимизировать учет и управление с помощью чистого и надежного кода.",
+                about_p2: "Я с глубоким уважением отношусь к бизнес-логике клиента. Будь то сложные отчеты на СКД, разработка расширений или интеграция со сторонними API, мой приоритет — стабильность.",
+                stat_exp: "Лет опыта", stat_proj: "Успешных проектов",
+                title_skills: "Мои Навыки",
+                skill_1_title: "Архитектура 1С", skill_1_desc: "Проектирование баз данных, разработка конфигураций с нуля и доработка типовых.",
+                skill_2_title: "СКД и Отчеты", skill_2_desc: "Написание оптимизированных запросов и создание сложных аналитических отчетов.",
+                skill_3_title: "API и Интеграции", skill_3_desc: "Связь 1С с сайтами, CRM и внешними базами через REST API и OData.",
+                skill_4_title: "Расширения", skill_4_desc: "Безопасная доработка типового функционала 1С без снятия с поддержки.",
+                title_work: "Последние Проекты",
+                proj_1_title: "Интеграция с Интернет-магазином", proj_1_desc: "Разработал REST API для синхронизации 1С:УТ с сайтом WooCommerce.",
+                proj_2_title: "Модуль Производства", proj_2_desc: "Создал расширение для расчета себестоимости сырья и автоматизации этапов производства.",
+                proj_3_title: "Интерфейс через Telegram Bot", proj_3_desc: "Разработал Telegram-бота, интегрированного с 1С, для удаленного согласования.",
+                title_contact: "Связаться со мной", contact_h3: "Готовы оптимизировать ваш бизнес?",
+                contact_p: "Я всегда открыт к обсуждению новых проектов, архитектуры баз данных и идей по интеграции.",
+                footer_text: "Программист 1С"
+            },
+            uz: {
+                nav_home: "Asosiy", nav_about: "Men haqimda", nav_skills: "Ko'nikmalar", nav_work: "Loyihalar", nav_contact: "Aloqa",
+                hero_subtitle: "&lt;Salom Dunyo /&gt;", hero_im: "Men", 
+                hero_desc: "Professional 1C Dasturchiman. Biznes jarayonlarini avtomatlashtirish va integratsiyalar bo'yicha mutaxassisman.",
+                btn_contact: "Bog'lanish", hero_code_text: "1C:Enterprise 8.3",
+                title_about: "Men Haqimda", about_h3: "Mas'uliyatli va sifatli dasturlash",
+                about_p1: "Men 1C platformasiga ixtisoslashganman. Maqsadim - toza va ishonchli kod yozish orqali biznesni optimallashtirish.",
+                about_p2: "Har bir loyihada mijozning biznes mantiqini hurmat qilaman. Murakkab СКД hisobotlarini yozish yoki API integratsiyalarida tizimning barqarorligini birinchi o'ringa qo'yaman.",
+                stat_exp: "Yillik tajriba", stat_proj: "Tugallangan loyihalar",
+                title_skills: "Ko'nikmalar",
+                skill_1_title: "1C Arxitekturasi", skill_1_desc: "Ma'lumotlar bazasini loyihalash, noldan konfiguratsiyalar yaratish va o'zgartirish.",
+                skill_2_title: "СКД va Hisobotlar", skill_2_desc: "Optimallashtirilgan so'rovlar yozish va murakkab analitik hisobotlarni yaratish.",
+                skill_3_title: "API va Integratsiyalar", skill_3_desc: "REST API va OData orqali 1C ni veb-saytlar va CRM tizimlariga ulash.",
+                skill_4_title: "Kengaytmalar", skill_4_desc: "Asosiy konfiguratsiyani o'zgartirmasdan standart 1C funksiyalarini moslashtirish.",
+                title_work: "So'nggi Loyihalar",
+                proj_1_title: "E-commerce Integratsiyasi", proj_1_desc: "1C:UT ni WooCommerce sayti bilan sinxronlashtirish uchun REST API.",
+                proj_2_title: "Ishlab chiqarish moduli", proj_2_desc: "Xom ashyo narxini hisoblash va ishlab chiqarishni avtomatlashtirish uchun kengaytma.",
+                proj_3_title: "Telegram Bot", proj_3_desc: "1C bazasi bilan integratsiyalashgan Telegram bot yaratildi.",
+                title_contact: "Bog'lanish", contact_h3: "Biznesingizni optimallashtirishga tayyormisiz?",
+                contact_p: "Men har doim yangi loyihalar va ma'lumotlar bazasi arxitekturasini muhokama qilishga tayyorman.",
+                footer_text: "Professional 1C Dasturchisi"
+            }
+        };
+
+        const typingPhrases = {
+            en: ["build 1C Configurations", "integrate APIs", "write complex Queries", "optimize Businesses"],
+            ru: ["разрабатываю в 1С", "настраиваю Интеграции", "пишу запросы в СКД", "автоматизирую Бизнес"],
+            uz: ["1C bazalar yarataman", "API integratsiya qilaman", "murakkab hisobotlar tuzaman", "biznesni avtomatlashtiraman"]
+        };
+
+        let currentLang = 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            clearTimeout(typeTimeout);
+            typePhraseIndex = 0;
+            charIndex = 0;
+            isDeleting = false;        // Force it to type, not delete
+            typingElement.textContent = ""; // Instantly clear the old word
+            
+            typeEffect();
+        }
+
+        /* --- 5. TYPING EFFECT LOGIC --- */
+        const typingElement = document.getElementById("typing-text");
+        let typePhraseIndex = 0; let charIndex = 0; let isDeleting = false; let typeTimeout;
+
+        function typeEffect() {
+            const phrases = typingPhrases[currentLang];
+            const currentPhrase = phrases[typePhraseIndex];
+
+            if (isDeleting) {
+                typingElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typingSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typingSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typePhraseIndex = (typePhraseIndex + 1) % phrases.length;
+                typingSpeed = 500;
+            }
+            typeTimeout = setTimeout(typeEffect, typingSpeed);
+        }
+        setTimeout(typeEffect, 1000);
+    </script>
+</body>
+</html>
