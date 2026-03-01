@@ -1,384 +1,613 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abror | 1C Developer</title>
+    <title>A&M | Korporativ IT Yechimlar</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-
     
+    <style>
+        /* =======================================================
+           1. ROYALTY CUSTOMIZATION VARIABLES
+        ======================================================== */
+        :root {
+            --bg-main: #0a0512;
+            --bg-card: rgba(28, 16, 50, 0.4);
+            --text-dark: #F8F5FF;
+            --text-muted: #B7A6D9;
+            --primary-accent: #E5B80B;
+            --secondary-accent: #8b5cf6; 
+            --primary-dark: #1b0e2d;
+            
+            --font-main: 'Inter', sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --speed: 0.4s;
+        }
+
+        /* =======================================================
+           2. BASE STYLES & BACKGROUND ORBS
+        ======================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: rgba(229, 184, 11, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
+        
+        body { background-color: var(--bg-main); color: var(--text-dark); overflow-x: hidden; position: relative; z-index: 0; }
+        .scroll-progress { position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: var(--primary-accent); z-index: 99999; box-shadow: 0 0 15px var(--primary-accent); transition: width 0.1s ease-out; }
+
+        body::before, body::after {
+            content: ''; position: fixed; width: 60vw; height: 60vw; max-width: 600px; max-height: 600px; border-radius: 50%; filter: blur(150px); z-index: -1; animation: floatOrb 12s infinite alternate ease-in-out; pointer-events: none;
+        }
+        body::before { background: rgba(229, 184, 11, 0.08); top: -10%; left: -10%; }
+        body::after { background: rgba(147, 112, 219, 0.08); bottom: -10%; right: -10%; animation-delay: -6s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 60px) scale(1.2); } }
+
+        section { padding: 120px 10%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        h1, h2, h3 { color: var(--text-dark); }
+        p { color: var(--text-muted); line-height: 1.6; font-size: 1rem; }
+
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 4rem; position: relative; }
+        .section-title::after { content: ''; width: 80px; height: 4px; background: var(--primary-accent); position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); border-radius: 2px; box-shadow: 0 0 10px var(--primary-accent); }
+
+        /* =======================================================
+           3. CUSTOM MAGIC CURSOR (DESKTOP ONLY)
+        ======================================================== */
+        @media (pointer: fine) { body { cursor: none; } }
+        .cursor-dot { width: 8px; height: 8px; background: var(--primary-accent); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; box-shadow: 0 0 10px var(--primary-accent); display: none; }
+        .cursor-outline { width: 40px; height: 40px; border: 2px solid rgba(229, 184, 11, 0.5); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9998; pointer-events: none; transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, border-color 0.2s ease; display: none; }
+        .cursor-hovering { width: 60px; height: 60px; background: rgba(229, 184, 11, 0.1); border-color: var(--primary-accent); backdrop-filter: blur(2px); }
+        @media (min-width: 992px) { .cursor-dot, .cursor-outline { display: block; } }
+
+        /* =======================================================
+           4. NAVBAR & RIGHT ALIGNMENT FIX
+        ======================================================== */
+        nav { position: fixed; top: 0; width: 100%; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 5, 18, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 4px 30px rgba(0,0,0,0.5); z-index: 1000; }
+        
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; z-index: 1002; }
+        .logo span { color: var(--primary-accent); text-shadow: 0 0 10px rgba(229, 184, 11, 0.5); }
+        
+        /* Container for everything on the right side */
+        .nav-right-wrapper { display: flex; align-items: center; gap: 2rem; z-index: 1002; }
+        
+        .nav-menu { display: flex; align-items: center; }
+        .nav-links { display: flex; list-style: none; gap: 1.5rem; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: var(--speed); position: relative; font-size: 0.95rem; }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; background: var(--primary-accent); bottom: -5px; left: 50%; transform: translateX(-50%); transition: 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-accent); text-shadow: 0 0 8px rgba(229, 184, 11, 0.5); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .lang-container { position: relative; display: inline-block; }
+        #lang-select { appearance: none; -webkit-appearance: none; background-color: rgba(255, 255, 255, 0.1); color: var(--primary-accent); border: 1px solid rgba(229, 184, 11, 0.4); padding: 6px 30px 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: var(--speed); outline: none; font-size: 0.9rem; }
+        #lang-select option { background-color: var(--bg-main); color: var(--text-dark); }
+        .lang-container::after { content: '\f0d7'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--primary-accent); font-size: 0.8rem; }
+
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .hamburger span { width: 26px; height: 3px; background: var(--text-dark); border-radius: 3px; transition: 0.4s all ease; }
+
+        /* =======================================================
+           5. HERO SECTION
+        ======================================================== */
+        #home { flex-direction: row; align-items: center; gap: 2rem; padding-top: 120px; }
+        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none; }
+        .particle { position: absolute; bottom: -10px; width: 4px; height: 4px; background: var(--primary-accent); border-radius: 50%; box-shadow: 0 0 10px var(--primary-accent); opacity: 0; animation: rise 10s infinite linear; }
+        .particle:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; } .particle:nth-child(2) { left: 30%; animation-duration: 12s; animation-delay: 2s; } .particle:nth-child(3) { left: 50%; animation-duration: 10s; animation-delay: 4s; } .particle:nth-child(4) { left: 70%; animation-duration: 14s; animation-delay: 1s; } .particle:nth-child(5) { left: 90%; animation-duration: 9s; animation-delay: 3s; }
+        @keyframes rise { 0% { bottom: -10px; opacity: 0; transform: translateX(0); } 50% { opacity: 0.5; transform: translateX(20px); } 100% { bottom: 100%; opacity: 0; transform: translateX(-20px); } }
+
+        .hero-text { flex: 1; }
+        .hero-text h2 { font-family: var(--font-code); color: var(--primary-accent); font-size: 1.1rem; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase;}
+        .hero-text h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 15px; }
+        .hero-text h1 span:last-child { background: linear-gradient(to right, #E5B80B, #FFFDE4, #E5B80B); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shineText 3s linear infinite; }
+        @keyframes shineText { to { background-position: 200% center; } }
+        
+        .typing-container { font-size: 1.3rem; color: var(--text-muted); margin-bottom: 30px; min-height: 35px; }
+        .typing-cursor { display: inline-block; width: 3px; background-color: var(--primary-accent); animation: blink 0.8s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .btn { padding: 14px 35px; background: var(--primary-accent); color: #000; text-decoration: none; border-radius: 30px; font-weight: 700; display: inline-block; border: 2px solid var(--primary-accent); box-shadow: 0 0 15px rgba(229, 184, 11, 0.2); transition: all 0.3s; }
+        @media (min-width: 992px) { .btn:hover { background: transparent; color: var(--primary-accent); box-shadow: 0 0 25px rgba(229, 184, 11, 0.4); } }
+
+        .hero-visual { flex: 1; display: flex; justify-content: center; perspective: 1000px; }
+        .interactive-card { width: 350px; height: 350px; background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(229, 184, 11, 0.3); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(229, 184, 11, 0.1); transition: transform 0.1s ease-out; transform-style: preserve-3d; }
+        .interactive-card i { font-size: 7rem; color: var(--primary-accent); margin-bottom: 20px; transform: translateZ(60px); text-shadow: 0 10px 30px rgba(229,184,11,0.5); }
+        .interactive-card span { font-family: var(--font-code); font-weight: 600; color: var(--text-dark); transform: translateZ(40px); background: rgba(0,0,0,0.5); padding: 6px 15px; border-radius: 20px; font-size: 0.95rem; text-align: center; max-width: 85%; word-wrap: break-word; line-height: 1.3;}
+
+        /* =======================================================
+           6. GLASSMORPHISM CARDS (Mobile safe)
+        ======================================================== */
+        .spotlight-card { position: relative; overflow: hidden; background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease, border-color 0.3s ease; }
+        
+        @media (min-width: 992px) {
+            .spotlight-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(229, 184, 11, 0.12), transparent 40%); z-index: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+            .spotlight-card:hover { transform: translateY(-5px); border-color: rgba(229, 184, 11, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+            .spotlight-card:hover::before { opacity: 1; }
+        }
+        .spotlight-card > * { position: relative; z-index: 1; }
+
+        /* =======================================================
+           7. TEAM, SKILLS, PROJECTS GRIDS
+        ======================================================== */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .team-card { padding: 2.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .avatar-placeholder { width: 100px; height: 100px; border-radius: 50%; background: rgba(229, 184, 11, 0.1); border: 2px solid var(--primary-accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--primary-accent); margin-bottom: 1.5rem; }
+        .team-card h3 { font-size: 1.5rem; margin-bottom: 5px; }
+        .team-role { font-family: var(--font-code); color: var(--secondary-accent); font-size: 0.85rem; margin-bottom: 15px; display: block; font-weight: 600;}
+        .team-bio { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .team-socials { display: flex; gap: 15px; justify-content: center; }
+        .team-socials a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .team-socials a:hover { background: var(--primary-accent); color: #000; box-shadow: 0 0 15px var(--primary-accent); border-color: var(--primary-accent); }
+
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+        .skill-card { padding: 2rem 1.5rem; }
+        .skill-icon { width: 45px; height: 45px; margin-bottom: 1rem; background: rgba(229, 184, 11, 0.1); display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 1.3rem; color: var(--primary-accent); border: 1px solid rgba(229, 184, 11, 0.2); transition: 0.5s; }
+        .skill-card:hover .skill-icon { background: var(--primary-accent); color: #000; transform: scale(1.1) rotate(5deg); box-shadow: 0 0 20px var(--primary-accent); }
+        .skill-card h3 { font-size: 1.1rem; margin-bottom: 8px;}
+
+        .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .case-card { padding: 2rem; display: flex; flex-direction: column; height: 100%; }
+        .case-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .case-header i { font-size: 1.5rem; color: #ff5f56; }
+        .case-header h3 { font-size: 1.3rem; margin: 0; }
+        .badge { display: inline-block; padding: 4px 10px; font-size: 0.7rem; font-weight: 700; border-radius: 6px; font-family: var(--font-code); margin-bottom: 8px; margin-top: 10px;}
+        .badge-problem { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .badge-solution { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .case-text { font-size: 0.9rem; margin-bottom: 10px; color: var(--text-muted); line-height: 1.5; }
+        .tech-stack { margin-top: auto; padding-top: 15px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { background: rgba(139, 92, 246, 0.1); color: var(--secondary-accent); border: 1px solid rgba(139, 92, 246, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-family: var(--font-code); }
+
+        .contact-box { padding: 3rem 2rem; border-radius: 20px; text-align: center; max-width: 800px; margin: 0 auto; }
+        footer { text-align: center; padding: 2rem; background: #05020a; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* =======================================================
+           8. AGGRESSIVE MOBILE RESPONSIVENESS (Gaps & Flow)
+        ======================================================== */
+        @media (max-width: 992px) {
+            #home { flex-direction: column; text-align: center; padding-top: 140px; }
+            .hero-visual { margin-top: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            /* REDUCED GAPS FOR PHONES */
+            section { padding: 75px 5%; min-height: auto; }
+            .section-title { font-size: 2rem; margin-bottom: 2.5rem; }
+            
+            /* Mobile Nav Logic */
+            nav { padding: 15px 5%; }
+            .nav-right-wrapper { gap: 15px; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; 
+                background: rgba(10, 5, 18, 0.98); backdrop-filter: blur(20px); 
+                display: flex; flex-direction: column; justify-content: center; 
+                align-items: center; transition: right 0.4s ease-in-out; margin: 0;
+            }
+            .nav-menu.active { right: 0; }
+            .nav-links { flex-direction: column; gap: 2.5rem; text-align: center; }
+            .nav-links a { font-size: 1.6rem; }
+            
+            .hamburger { display: flex; z-index: 1002; }
+            .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); background: var(--primary-accent); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background: var(--primary-accent); }
+            
+            #home { padding-top: 120px; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-text h2 { font-size: 0.9rem; }
+            .typing-container { font-size: 1.1rem; margin-bottom: 25px; }
+            
+            /* Reduced Interactive Card for Phones */
+            .interactive-card { width: 230px; height: 230px; }
+            .interactive-card i { font-size: 5rem; margin-bottom: 15px;}
+            .interactive-card span { font-size: 0.8rem; padding: 4px 10px; }
+
+            .team-grid, .skills-grid, .work-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .case-card { padding: 1.5rem; }
+            .team-card { padding: 2rem 1rem; }
+            .contact-box { padding: 2.5rem 1.5rem; }
+            .contact-box h3 { font-size: 1.5rem; line-height: 1.4; margin-bottom: 20px;}
+        }
+
+        /* Very small screens (iPhone SE) */
+        @media (max-width: 380px) {
+            .logo { font-size: 1.3rem; }
+            #lang-select { padding: 5px 22px 5px 8px; font-size: 0.8rem; }
+            .hero-text h1 { font-size: 2.2rem; }
+            .interactive-card { width: 200px; height: 200px; }
+            .interactive-card span { font-size: 0.75rem; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
-        <a href="#home" class="logo">Abror<span>.1C</span></a>
-        
-        <div class="nav-menu">
-            <ul class="nav-links">
-                <li><a href="#home" data-i18n="nav_home">Home</a></li>
-                <li><a href="#about" data-i18n="nav_about">About</a></li>
-                <li><a href="#skills" data-i18n="nav_skills">Skills</a></li>
-                <li><a href="#work" data-i18n="nav_work">Work</a></li>
-                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-            </ul>
-            
-            <!-- Language Switcher -->
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
-                <button class="lang-btn" onclick="setLanguage('uz')">UZ</button>
-            </div>
-        </div>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
-        <!-- Mobile Hamburger Icon -->
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
+    <!-- NAVBAR (Fixed structure for alignment) -->
+    <nav>
+        <a href="#home" class="logo hover-target">ABROR<span>.Dev</span></a>
+        
+        <div class="nav-right-wrapper">
+            <!-- Menu links (hidden on mobile, overlayed via hamburger) -->
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="#home" class="hover-target" data-i18n="nav_home">Asosiy</a></li>
+                    <li><a href="#team" class="hover-target" data-i18n="nav_team">Jamoa</a></li>
+                    <li><a href="#skills" class="hover-target" data-i18n="nav_skills">Ko'nikmalar</a></li>
+                    <li><a href="#projects" class="hover-target" data-i18n="nav_work">Loyihalar</a></li>
+                    <li><a href="#contact" class="hover-target" data-i18n="nav_contact">Bog'lanish</a></li>
+                </ul>
+            </div>
+            
+            <!-- Language Dropdown (Always visible) -->
+            <div class="lang-container hover-target">
+                <!-- Set UZ as default -->
+                <select id="lang-select" onchange="setLanguage(this.value)">
+                    <option value="uz" selected>UZ</option>
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                </select>
+            </div>
+            
+            <!-- Hamburger (Mobile Only) -->
+            <div class="hamburger hover-target"><span></span><span></span><span></span></div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
     <section id="home">
-        <div class="hero-text reveal">
-            <h2>&lt;Hello World /&gt;</h2>
-            <h1><span data-i18n="hero_im">I'm</span> <span>Abror</span></h1>
-            
-            <!-- Interactive Typing Text -->
-            <div class="typing-container">
-                <span id="typing-text"></span><span class="typing-cursor">|</span>
-            </div>
+        <div class="particles">
+            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        </div>
 
-            <p data-i18n="hero_desc">A professional 1C Developer specializing in enterprise automation, complex queries, and business system integrations.</p>
+        <div class="hero-text reveal">
+            <h2 data-i18n="hero_subtitle">Korporativ IT Yechimlar</h2>
+            <h1><span data-i18n="hero_we">Oliy Toifali</span> <span>Mutaxassislar</span></h1>
+            <div class="typing-container"><span id="typing-text"></span><span class="typing-cursor">|</span></div>
+            <p data-i18n="hero_desc">Zamonaviy korxonalar uchun kompleks avtomatlashtirish, ilg'or Python integratsiyalari va yuqori darajadagi biznes tizimlari arxitekturasini taqdim etamiz.</p>
             <br>
-            <a href="#contact" class="btn" data-i18n="btn_contact">Let's Talk</a>
+            <a href="#contact" class="btn hover-target magnet-btn" data-i18n="btn_contact">Hamkorlik Qilish</a>
         </div>
         
-        <!-- Interactive 3D Hover Element -->
         <div class="hero-visual reveal">
             <div class="interactive-card" id="tilt-card">
-                <i class="fa-solid fa-database"></i>
-                <span data-i18n="hero_code_text">1C:Enterprise 8.3</span>
+                <i class="fa-solid fa-code-branch"></i>
+                <span data-i18n="hero_code_text">Tizimli Integratsiyalar</span>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about">
-        <h2 class="section-title reveal" data-i18n="title_about">About Me</h2>
-        <div class="about-grid">
-            <div class="reveal">
-                <h3 style="margin-bottom: 15px; font-size: 1.8rem;" data-i18n="about_h3">Respectful & Structured Development</h3>
-                <p data-i18n="about_p1">I specialize in the 1C:Enterprise platform. My goal is to help businesses optimize their accounting, management, and operational processes through clean, efficient, and reliable code.</p>
-                <br>
-                <p data-i18n="about_p2">I approach every project with deep respect for the client's business logic. Whether writing complex queries using DCS (СКД), developing extensions, or integrating with third-party web services, I prioritize stability.</p>
-                
-                <div class="about-stats">
-                    <div class="stat-box">
-                        <h3>5+</h3>
-                        <p data-i18n="stat_exp">Years Experience</p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>30+</h3>
-                        <p data-i18n="stat_proj">Projects Completed</p>
-                    </div>
-                </div>
-            </div>
+    <!-- TEAM SECTION (EQUAL PARTNERSHIP) -->
+    <section id="team">
+        <h2 class="section-title reveal" data-i18n="title_team">Jamoamiz</h2>
+        <div class="team-grid">
             
-            <!-- Code Card -->
-            <div class="reveal code-block">
-                <div style="color: #F56565; margin-bottom: 10px;">// My Core Philosophy</div>
-                <div><span style="color: #D69E2E;">Функция</span> <span style="color: #63B3ED;">SolveBusinessProblem</span>(ClientNeeds)</div>
-                <div style="margin-left: 20px; margin-top: 10px;">
-                    <span style="color: #D69E2E;">Если</span> ClientNeeds.IsComplex <span style="color: #D69E2E;">Тогда</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;AnalyzeLogic();<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;WriteCleanCode();<br>
-                    <span style="color: #D69E2E;">КонецЕсли</span>;<br><br>
-                    <span style="color: #D69E2E;">Возврат</span> "Stable System & Happy Client";
+            <div class="team-card spotlight-card hover-target reveal " style="overflow: hidden; ">
+                <div class="avatar-placeholder" style="overflow: hidden; border: 2px solid var(--primary-accent);">
+                    <img src="01.03.2026-Irsaliyev Abror Alimdjanovich.jpg" alt="Abror" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <div><span style="color: #D69E2E;">КонецФункции</span></div>
+                <h3>Abror</h3>
+                <span class="team-role" data-i18n="abror_role">Tizim Arxitektori va 1C Muhandisi</span>
+                <p class="team-bio" data-i18n="abror_bio">1C:Korxona platformasi va IT arxitektura bo'yicha mutaxassis. Asosiy maqsadim – korxonalarning hisob-kitob va boshqaruv jarayonlarini mustahkam, barqaror va xavfsiz tizimlar orqali mukammallashtirish.</p>
+                <div class="team-socials">
+                    <a href="#" class="magnet-btn"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="magnet-btn"><i class="fa-brands fa-github"></i></a>
+                </div>
             </div>
+
+            <div class="team-card spotlight-card hover-target reveal">
+                <div class="avatar-placeholder" style="overflow: hidden; border: 2px solid var(--primary-accent);"><img src="murodxoja.png" alt="Abror" style="width: 100%; height: 100%; object-fit: cover;"></i></div>
+                <h3>Murodxoja Sultonov</h3>
+                <span class="team-role" data-i18n="murodxoja_role">Biznes Tahlilchisi va 1C Muhandisi</span>
+                <p class="team-bio" data-i18n="murodxoja_bio">1C:Korxona 8, MS SQL va murakkab biznes jarayonlarini tahlil qilish bo'yicha chuqur tajribaga ega mutaxassis. Hozirda 'TOSHSHAHARTRANSXIZMAT' AJ korporativ infratuzilmasini rivojlantirmoqda. Yeoju universiteti bitiruvchisi.</p>
+                <div class="team-socials">
+                    <a href="#" class="magnet-btn"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="magnet-btn"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <!-- SKILLS SECTION -->
     <section id="skills">
-        <h2 class="section-title reveal" data-i18n="title_skills">Core Skills</h2>
+        <h2 class="section-title reveal" data-i18n="title_skills">Ekspertiza va Texnologiyalar</h2>
         <div class="skills-grid">
-            <div class="skill-card reveal">
-                <div class="skill-icon"><i class="fa-solid fa-layer-group"></i></div>
-                <h3 data-i18n="skill_1_title">1C Architecture</h3>
-                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_1_desc">Designing databases, building custom configurations from scratch, and modifying existing systems.</p>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-regular fa-window-maximize"></i></div>
+                    <h3 data-i18n="skill_1_title">1C:Korxona (Enterprise)</h3>
+                </div>
+                <p data-i18n="skill_1_desc">Keng ko'lamli korporativ konfiguratsiyalarni loyihalash, moslashtirish va integratsiya qilish.</p>
             </div>
-            <div class="skill-card reveal">
-                <div class="skill-icon"><i class="fa-solid fa-chart-pie"></i></div>
-                <h3 data-i18n="skill_2_title">DCS (СКД) & Reports</h3>
-                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_2_desc">Writing highly optimized queries and creating complex analytical reports.</p>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-solid fa-cubes"></i></div>
+                    <h3 data-i18n="skill_2_title">ERP va Biznes Tizimlari</h3>
+                </div>
+                <p data-i18n="skill_2_desc">Korxona resurslarini boshqarish bo'yicha murakkab me'moriy yechimlarni joriy etish.</p>
             </div>
-            <div class="skill-card reveal">
-                <div class="skill-icon"><i class="fa-solid fa-network-wired"></i></div>
-                <h3 data-i18n="skill_3_title">API & Integrations</h3>
-                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_3_desc">Connecting 1C with websites, Telegram bots, CRM systems via REST API and OData.</p>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-solid fa-code"></i></div>
+                    <h3 data-i18n="skill_3_title">Python Avtomatizatsiyasi</h3>
+                </div>
+                <p data-i18n="skill_3_desc">Python yordamida chuqur tahliliy jarayonlarni avtomatlashtirish va biznes mantiqini yaratish.</p>
             </div>
-            <div class="skill-card reveal">
-                <div class="skill-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
-                <h3 data-i18n="skill_4_title">Extensions</h3>
-                <p style="margin-top: 10px; font-size: 0.95rem;" data-i18n="skill_4_desc">Safely modifying standard 1C behaviors without altering the core configuration.</p>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-solid fa-globe"></i></div>
+                    <h3 data-i18n="skill_4_title">Web va API Arxitekturasi</h3>
+                </div>
+                <p data-i18n="skill_4_desc">Zamonaviy korporativ veb-ilovalar va yuqori yuklamali RESTful API xizmatlarini yaratish.</p>
+            </div>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3 data-i18n="skill_5_title">Tizimli Integratsiyalar</h3>
+                </div>
+                <p data-i18n="skill_5_desc">Turli xil platformalarni yagona ekotizimga birlashtirish va xavfsiz ma'lumotlar oqimini ta'minlash.</p>
+            </div>
+            <div class="skill-card spotlight-card hover-target reveal">
+                <div class="skill-header">
+                    <div class="skill-icon"><i class="fa-solid fa-barcode"></i></div>
+                    <h3 data-i18n="skill_6_title">Logistika va Omborxona</h3>
+                </div>
+                <p data-i18n="skill_6_desc">Shtrix-kod tizimlari, mobil terminallar va ta'minot zanjiri jarayonlarini raqamlashtirish.</p>
             </div>
         </div>
     </section>
 
-    <!-- WORK SECTION -->
-    <section id="work">
-        <h2 class="section-title reveal" data-i18n="title_work">Recent Projects</h2>
+    <!-- PROJECTS SECTION -->
+    <section id="projects">
+        <h2 class="section-title reveal" data-i18n="title_work">Amalga Oshirilgan Loyihalar</h2>
         <div class="work-grid">
-            <div class="work-card reveal">
-                <div class="work-img"><i class="fa-solid fa-store"></i></div>
-                <div class="work-content">
-                    <h3 data-i18n="proj_1_title">E-commerce Integration</h3>
-                    <p data-i18n="proj_1_desc">Developed a REST API to synchronize 1C:Trade Management with WooCommerce.</p>
-                    <div class="work-tags">
-                        <span class="tag">HTTP-Services</span> <span class="tag">JSON</span>
-                    </div>
+            <div class="case-card spotlight-card hover-target reveal">
+                <div class="case-header">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h3 data-i18n="proj_1_title">ERP Tizimi Integratsiyasi</h3>
                 </div>
+                <span class="badge badge-problem" data-i18n="badge_problem">BIZNES MUAMMO</span>
+                <p class="case-text" data-i18n="proj_1_prob">Ishlab chiqarish kompaniyasiga 1C va tashqi omborni boshqarish tizimi (WMS) o'rtasida uzluksiz sinxronizatsiya zarur edi.</p>
+                <span class="badge badge-solution" data-i18n="badge_solution">KORPORATIV YECHIM</span>
+                <p class="case-text" data-i18n="proj_1_sol">Avtomatlashtirilgan ma'lumotlar almashinuvi, xatoliklarni boshqarish va monitoring paneliga ega maxsus integratsiya moduli ishlab chiqildi.</p>
+                <div class="tech-stack"><span class="tag">1C:Enterprise</span> <span class="tag">Python</span> <span class="tag">REST API</span></div>
             </div>
-            <div class="work-card reveal">
-                <div class="work-img"><i class="fa-solid fa-industry"></i></div>
-                <div class="work-content">
-                    <h3 data-i18n="proj_2_title">Manufacturing Module</h3>
-                    <p data-i18n="proj_2_desc">Created an extension for calculating raw material costs and automating production stages.</p>
-                    <div class="work-tags">
-                        <span class="tag">Extensions</span> <span class="tag">СКД</span>
-                    </div>
+
+            <div class="case-card spotlight-card hover-target reveal">
+                <div class="case-header">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h3 data-i18n="proj_2_title">Ombor Avtomatizatsiyasi</h3>
                 </div>
+                <span class="badge badge-problem" data-i18n="badge_problem">BIZNES MUAMMO</span>
+                <p class="case-text" data-i18n="proj_2_prob">Chakana savdo tarmog'ida tovarlarni qo'lda kuzatish qiyinlashib, ombordagi qoldiqlar bo'yicha tez-tez tafovutlar yuzaga kelgan.</p>
+                <span class="badge badge-solution" data-i18n="badge_solution">KORPORATIV YECHIM</span>
+                <p class="case-text" data-i18n="proj_2_sol">Mobil skanerlash, real vaqtda yangilash va tahliliy hisobotlarni o'z ichiga olgan shtrix-kod kuzatuv tizimi joriy etildi.</p>
+                <div class="tech-stack"><span class="tag">Python</span> <span class="tag">FastAPI</span> <span class="tag">React</span></div>
             </div>
-            <div class="work-card reveal">
-                <div class="work-img"><i class="fa-brands fa-telegram"></i></div>
-                <div class="work-content">
-                    <h3 data-i18n="proj_3_title">Telegram Bot Interface</h3>
-                    <p data-i18n="proj_3_desc">Built a Telegram bot integrated directly with a 1C database for remote approvals.</p>
-                    <div class="work-tags">
-                        <span class="tag">Telegram API</span> <span class="tag">Webhooks</span>
-                    </div>
+
+            <div class="case-card spotlight-card hover-target reveal">
+                <div class="case-header">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h3 data-i18n="proj_3_title">Korporativ Jarayonlar</h3>
                 </div>
+                <span class="badge badge-problem" data-i18n="badge_problem">BIZNES MUAMMO</span>
+                <p class="case-text" data-i18n="proj_3_prob">Distribyutorlik kompaniyasi ma'lumotlarni kiritish va hisobotlarni shakllantirish uchun har kuni samarasiz vaqt sarflar edi.</p>
+                <span class="badge badge-solution" data-i18n="badge_solution">KORPORATIV YECHIM</span>
+                <p class="case-text" data-i18n="proj_3_sol">Hujjatlarni qayta ishlash, tekshirish va rejalashtirilgan hisobotlarni yaratish bo'yicha to'liq avtomatlashtirilgan tizim yaratildi.</p>
+                <div class="tech-stack"><span class="tag">Python</span> <span class="tag">1C:Enterprise</span> <span class="tag">Excel</span></div>
+            </div>
+
+            <div class="case-card spotlight-card hover-target reveal">
+                <div class="case-header">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h3 data-i18n="proj_4_title">CRM Tizimini Moslashtirish</h3>
+                </div>
+                <span class="badge badge-problem" data-i18n="badge_problem">BIZNES MUAMMO</span>
+                <p class="case-text" data-i18n="proj_4_prob">Savdo bo'limiga standart echimlarda mavjud bo'lmagan, maxsus tahliliy CRM xususiyatlari talab etilardi.</p>
+                <span class="badge badge-solution" data-i18n="badge_solution">KORPORATIV YECHIM</span>
+                <p class="case-text" data-i18n="proj_4_sol">Mijozlarni boshqarish va tahlil qilish uchun maxsus modullar yordamida mavjud CRM tizimi muvaffaqiyatli kengaytirildi.</p>
+                <div class="tech-stack"><span class="tag">1C:Enterprise</span> <span class="tag">JavaScript</span> <span class="tag">Chart.js</span></div>
             </div>
         </div>
     </section>
 
     <!-- CONTACT SECTION -->
     <section id="contact">
-        <h2 class="section-title reveal" data-i18n="title_contact">Get In Touch</h2>
-        <div class="contact-box reveal">
-            <h3 style="margin-bottom: 15px;" data-i18n="contact_h3">Ready to optimize your business?</h3>
-            <p data-i18n="contact_p">I am always open to discussing new projects, database architectures, or integration ideas.</p>
-            
-            <div class="social-links">
-                <a href="mailto:your-email@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
-                <a href="https://t.me/your_telegram" title="Telegram" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-                <a href="https://github.com/your_github" title="GitHub" target="_blank"><i class="fa-brands fa-github"></i></a>
-                <a href="tel:+998901234567" title="Phone"><i class="fa-solid fa-phone"></i></a>
+        <h2 class="section-title reveal" data-i18n="title_contact">Hamkorlik Qilish</h2>
+        <div class="contact-box spotlight-card hover-target reveal">
+            <h3 style="margin-bottom: 15px;" data-i18n="contact_h3">Biznesingizni Yangi Bosqichga Olib Chiqing</h3>
+            <p data-i18n="contact_p">Biz doimo yuqori darajadagi ma'lumotlar bazasi arxitekturasi, murakkab integratsiyalar va korporativ yechimlarni muhokama qilishga tayyormiz.</p>
+            <div class="team-socials" style="margin-top: 30px;">
+                <a href="mailto:team@example.com" class="magnet-btn"><i class="fa-solid fa-envelope"></i></a>
+                <a href="#" class="magnet-btn" target="_blank"><i class="fa-brands fa-telegram"></i></a>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2023 Abror | <span data-i18n="footer_text">Professional 1C Developer</span></p>
+        <p>&copy; 2023 A&M Dev Team | <span data-i18n="footer_text">Premium Korporativ Yechimlar</span></p>
     </footer>
 
     <!-- =======================================================
          JAVASCRIPT LOGIC
     ======================================================== -->
     <script>
-        /* --- 1. MOBILE MENU LOGIC --- */
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-        const navLinks = document.querySelectorAll('.nav-links a');
-        const langBtns = document.querySelectorAll('.lang-btn');
+        const isMobile = window.matchMedia("(max-width: 992px)").matches;
 
-        // Toggle menu
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        /* Desktop Effects */
+        if (!isMobile) {
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+            const hoverTargets = document.querySelectorAll('.hover-target');
+
+            window.addEventListener('mousemove', (e) => {
+                cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px';
+                cursorOutline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" });
+            });
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => cursorOutline.classList.add('cursor-hovering'));
+                target.addEventListener('mouseleave', () => cursorOutline.classList.remove('cursor-hovering'));
+            });
+
+            document.querySelectorAll('.spotlight-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                });
+            });
+
+            document.querySelectorAll('.magnet-btn').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+                btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px)`);
+            });
+
+            const tiltCard = document.getElementById('tilt-card');
+            document.addEventListener('mousemove', (e) => {
+                if (window.scrollY > 800) return; 
+                let xAxis = (e.clientX - window.innerWidth / 2) / 20; 
+                let yAxis = (window.innerHeight / 2 - e.clientY) / 20; 
+                tiltCard.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+            document.addEventListener('mouseleave', () => tiltCard.style.transform = `rotateY(0deg) rotateX(0deg)`);
+        }
+
+        /* Scroll Progress & Reveal */
+        window.addEventListener('scroll', () => {
+            const scrolled = (document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + "%";
         });
 
-        // Close menu when a link or language button is clicked
-        const closeMenu = () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        };
-        navLinks.forEach(link => link.addEventListener('click', closeMenu));
-        langBtns.forEach(btn => btn.addEventListener('click', closeMenu));
-
-
-        /* --- 2. FIXED 3D TILT EFFECT --- */
-        const tiltCard = document.getElementById('tilt-card');
-        
-        document.addEventListener('mousemove', (e) => {
-            // Stop animating if user scrolled past the hero section (saves performance)
-            if (window.scrollY > 800) return; 
-            
-            // CORRECT MATH: If mouse is on right, rotation should be positive. If mouse is at bottom, rotation should be negative.
-            let xAxis = (e.clientX - window.innerWidth / 2) / 20; 
-            let yAxis = (window.innerHeight / 2 - e.clientY) / 20; 
-            
-            tiltCard.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-        
-        // Reset tilt gently when mouse leaves the window
-        document.addEventListener('mouseleave', () => {
-            tiltCard.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        });
-
-
-        /* --- 3. SCROLL REVEAL ANIMATION --- */
         function revealElements() {
-            const reveals = document.querySelectorAll(".reveal");
-            const windowHeight = window.innerHeight;
-
-            reveals.forEach(el => {
-                const elementTop = el.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 100) {
-                    el.classList.add("active");
+            document.querySelectorAll(".reveal").forEach((el, index) => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 50) {
+                    setTimeout(() => el.classList.add("active"), isMobile ? 0 : index * 30);
                 }
             });
         }
-        window.addEventListener("scroll", revealElements);
-        revealElements(); // Trigger immediately on load
+        window.addEventListener("scroll", revealElements); revealElements();
 
+        /* Mobile Menu */
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const closeMenu = () => { hamburger.classList.remove('active'); navMenu.classList.remove('active'); };
+        
+        hamburger.addEventListener('click', () => { 
+            hamburger.classList.toggle('active'); 
+            navMenu.classList.toggle('active'); 
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMenu));
 
-        /* --- 4. LANGUAGE DICTIONARY & LOGIC --- */
+        /* TRANSLATION DICTIONARY (Formal, Equal & Royal B2B Tone) */
         const translations = {
             en: {
-                nav_home: "Home", nav_about: "About", nav_skills: "Skills", nav_work: "Work", nav_contact: "Contact",
-                hero_subtitle: "&lt;Hello World /&gt;", hero_im: "I'm", 
-                hero_desc: "A professional 1C Developer specializing in enterprise automation, complex queries, and business system integrations.",
-                btn_contact: "Let's Talk", hero_code_text: "1C:Enterprise 8.3",
-                title_about: "About Me", about_h3: "Respectful & Structured Development",
-                about_p1: "I specialize in the 1C:Enterprise platform. My goal is to help businesses optimize their accounting, management, and operational processes through clean, efficient, and reliable code.",
-                about_p2: "I approach every project with deep respect for the client's business logic. Whether writing complex queries using DCS (СКД), developing extensions, or integrating with third-party web services, I prioritize stability.",
-                stat_exp: "Years Experience", stat_proj: "Projects Completed",
-                title_skills: "Core Skills",
-                skill_1_title: "1C Architecture", skill_1_desc: "Designing databases, building custom configurations, and modifying existing systems.",
-                skill_2_title: "DCS (СКД) & Reports", skill_2_desc: "Writing highly optimized queries and creating complex analytical reports.",
-                skill_3_title: "API & Integrations", skill_3_desc: "Connecting 1C with websites, CRM systems, and external databases via REST API and OData.",
-                skill_4_title: "Extensions", skill_4_desc: "Safely modifying standard 1C behaviors without altering the core configuration.",
-                title_work: "Recent Projects",
-                proj_1_title: "E-commerce Integration", proj_1_desc: "Developed a REST API to synchronize 1C:Trade Management with WooCommerce.",
-                proj_2_title: "Manufacturing Module", proj_2_desc: "Created an extension for calculating raw material costs and automating production stages.",
-                proj_3_title: "Telegram Bot Interface", proj_3_desc: "Built a Telegram bot integrated with a 1C database, allowing managers to approve invoices remotely.",
-                title_contact: "Get In Touch", contact_h3: "Ready to optimize your business?",
-                contact_p: "I am always open to discussing new projects, database architectures, or integration ideas.",
-                footer_text: "Professional 1C Developer"
+                nav_home: "Home", nav_team: "Team", nav_skills: "Expertise", nav_work: "Case Studies", nav_contact: "Contact",
+                hero_subtitle: "Enterprise IT Solutions", hero_we: "Elite", hero_desc: "Providing comprehensive automation, advanced Python integrations, and scalable business system architectures for modern enterprises.", btn_contact: "Consult With Us", hero_code_text: "System Architectures",
+                title_team: "Executive Team",
+                abror_role: "System Architect & 1C Engineer", abror_bio: "Specializing in the 1C:Enterprise platform. My primary objective is to engineer flawless accounting, management, and operational workflows through sophisticated, high-performance code.",
+                murodxoja_role: "Business Analyst & 1C Engineer", murodxoja_bio: "Bringing over 3 years of deep expertise in 1C:Enterprise 8, MS SQL, and business process analysis. Currently advancing corporate IT infrastructure at JSC 'TOSHSHAHARTRANSXIZMAT'. Yeoju Technical Institute alumni.",
+                title_skills: "Technical Expertise",
+                skill_1_title: "1C:Enterprise Solutions", skill_1_desc: "Architecting bespoke configurations, complex modifications, and deep integrations for the 1C platform.",
+                skill_2_title: "ERP Architecture", skill_2_desc: "End-to-end design and implementation of highly scalable enterprise resource planning systems.",
+                skill_3_title: "Python Automation", skill_3_desc: "Executing advanced process automation, large-scale data processing, and complex business logic via Python.",
+                skill_4_title: "Web & API Engineering", skill_4_desc: "Constructing modern enterprise web applications and highly responsive RESTful API infrastructures.",
+                skill_5_title: "System Interoperability", skill_5_desc: "Bridging disparate platforms to ensure a seamless, highly secure data flow across corporate networks.",
+                skill_6_title: "Warehouse Digitalization", skill_6_desc: "Deploying barcode ecosystems, mobile scanning logic, and supply chain workflow optimizations.",
+                title_work: "Deployed Solutions", badge_problem: "BUSINESS CHALLENGE", badge_solution: "ENGINEERED SOLUTION",
+                proj_1_title: "ERP System Integration", proj_1_prob: "A manufacturing corporation required real-time synchronization between their 1C core and an external Warehouse Management System.", proj_1_sol: "Engineered a custom integration module featuring automated data exchange, advanced error handling, and a monitoring dashboard.",
+                proj_2_title: "Inventory Automation", proj_2_prob: "A major retail chain experienced operational bottlenecks with manual inventory tracking and recurrent stock discrepancies.", proj_2_sol: "Deployed a sophisticated barcode-tracking ecosystem utilizing mobile scanning, real-time analytics, and instant database updates.",
+                proj_3_title: "Workflow Automation", proj_3_prob: "A distribution enterprise suffered massive efficiency losses due to manual data entry and sluggish report generation.", proj_3_sol: "Architected a fully automated workflow system capable of high-speed document processing, validation, and scheduled reporting.",
+                proj_4_title: "CRM Architectural Customization", proj_4_prob: "A corporate sales division required highly specialized analytical CRM capabilities unavailable in standard software suites.", proj_4_sol: "Successfully expanded the existing CRM infrastructure using bespoke modules tailored for advanced client lifecycle management.",
+                title_contact: "Initiate Collaboration", contact_h3: "Transform Your Business Operations", contact_p: "We invite you to discuss high-level database architectures, complex integrations, and bespoke enterprise solutions.", footer_text: "Premium Corporate Solutions"
             },
             ru: {
-                nav_home: "Главная", nav_about: "Обо мне", nav_skills: "Навыки", nav_work: "Проекты", nav_contact: "Контакты",
-                hero_subtitle: "&lt;Привет Мир /&gt;", hero_im: "Я", 
-                hero_desc: "Профессиональный программист 1С. Специализируюсь на автоматизации бизнеса, сложных запросах и интеграциях.",
-                btn_contact: "Связаться", hero_code_text: "1С:Предприятие 8.3",
-                title_about: "Обо мне", about_h3: "Ответственная и структурированная разработка",
-                about_p1: "Я специализируюсь на платформе 1С:Предприятие. Моя цель — помочь бизнесу оптимизировать учет и управление с помощью чистого и надежного кода.",
-                about_p2: "Я с глубоким уважением отношусь к бизнес-логике клиента. Будь то сложные отчеты на СКД, разработка расширений или интеграция со сторонними API, мой приоритет — стабильность.",
-                stat_exp: "Лет опыта", stat_proj: "Успешных проектов",
-                title_skills: "Мои Навыки",
-                skill_1_title: "Архитектура 1С", skill_1_desc: "Проектирование баз данных, разработка конфигураций с нуля и доработка типовых.",
-                skill_2_title: "СКД и Отчеты", skill_2_desc: "Написание оптимизированных запросов и создание сложных аналитических отчетов.",
-                skill_3_title: "API и Интеграции", skill_3_desc: "Связь 1С с сайтами, CRM и внешними базами через REST API и OData.",
-                skill_4_title: "Расширения", skill_4_desc: "Безопасная доработка типового функционала 1С без снятия с поддержки.",
-                title_work: "Последние Проекты",
-                proj_1_title: "Интеграция с Интернет-магазином", proj_1_desc: "Разработал REST API для синхронизации 1С:УТ с сайтом WooCommerce.",
-                proj_2_title: "Модуль Производства", proj_2_desc: "Создал расширение для расчета себестоимости сырья и автоматизации этапов производства.",
-                proj_3_title: "Интерфейс через Telegram Bot", proj_3_desc: "Разработал Telegram-бота, интегрированного с 1С, для удаленного согласования.",
-                title_contact: "Связаться со мной", contact_h3: "Готовы оптимизировать ваш бизнес?",
-                contact_p: "Я всегда открыт к обсуждению новых проектов, архитектуры баз данных и идей по интеграции.",
-                footer_text: "Программист 1С"
+                nav_home: "Главная", nav_team: "Команда", nav_skills: "Экспертиза", nav_work: "Кейсы", nav_contact: "Контакты",
+                hero_subtitle: "Корпоративные IT Решения", hero_we: "Элитные", hero_desc: "Предоставляем комплексную автоматизацию, передовые интеграции на Python и масштабируемую архитектуру бизнес-систем для современных предприятий.", btn_contact: "Сотрудничество", hero_code_text: "Системные Интеграции",
+                title_team: "Руководящий Состав",
+                abror_role: "Системный Архитектор и Инженер 1С", abror_bio: "Специализируюсь на платформе 1С:Предприятие. Моя главная цель — обеспечить безупречные учетные и управленческие процессы посредством высокопроизводительного корпоративного кода.",
+                murodxoja_role: "Бизнес-Аналитик и Инженер 1С", murodxoja_bio: "Более 3 лет глубокой экспертизы в 1С:Предприятие 8, MS SQL и аналитике бизнес-процессов. Развиваю корпоративную IT-инфраструктуру в АО «TOSHSHAHARTRANSXIZMAT». Выпускник Технического Института Ёджу.",
+                title_skills: "Техническая Экспертиза",
+                skill_1_title: "Решения 1С:Предприятие", skill_1_desc: "Проектирование индивидуальных конфигураций, сложных модификаций и глубоких интеграций.",
+                skill_2_title: "Архитектура ERP", skill_2_desc: "Проектирование и внедрение масштабируемых систем планирования ресурсов предприятия (ERP) под ключ.",
+                skill_3_title: "Автоматизация на Python", skill_3_desc: "Реализация передовой автоматизации процессов и обработки больших данных с использованием Python.",
+                skill_4_title: "Web и API Инженерия", skill_4_desc: "Создание современных корпоративных веб-приложений и высоконагруженных инфраструктур RESTful API.",
+                skill_5_title: "Интеграция Систем", skill_5_desc: "Объединение разрозненных платформ для обеспечения безопасного потока данных в корпоративных сетях.",
+                skill_6_title: "Цифровизация Складов", skill_6_desc: "Внедрение экосистем штрихкодирования, мобильного сканирования и оптимизация логистических цепочек.",
+                title_work: "Реализованные Решения", badge_problem: "БИЗНЕС-ЗАДАЧА", badge_solution: "ВНЕДРЕННОЕ РЕШЕНИЕ",
+                proj_1_title: "Интеграция ERP Системы", proj_1_prob: "Производственной корпорации требовалась синхронизация в реальном времени между ядром 1С и внешней системой управления складом (WMS).", proj_1_sol: "Спроектирован кастомный модуль интеграции с автоматическим обменом данными, обработкой ошибок и дашбордом мониторинга.",
+                proj_2_title: "Автоматизация Инвентаризации", proj_2_prob: "Крупная розничная сеть несла операционные убытки из-за ручного учета запасов и регулярных расхождений.", proj_2_sol: "Внедрена передовая экосистема отслеживания штрих-кодов, использующая мобильное сканирование и аналитику в реальном времени.",
+                proj_3_title: "Автоматизация Процессов", proj_3_prob: "Дистрибьюторское предприятие теряло эффективность из-за ручного ввода данных и медленной генерации отчетов.", proj_3_sol: "Создана полностью автоматизированная система документооборота с высокоскоростной обработкой и валидацией.",
+                proj_4_title: "Кастомизация Архитектуры CRM", proj_4_prob: "Корпоративному отделу продаж требовались узкоспециализированные аналитические возможности CRM.", proj_4_sol: "Успешно расширена существующая инфраструктура CRM с использованием модулей, разработанных под индивидуальные нужды клиента.",
+                title_contact: "Начать Сотрудничество", contact_h3: "Трансформируйте Ваш Бизнес", contact_p: "Мы приглашаем вас к обсуждению архитектуры баз данных высокого уровня, сложных интеграций и корпоративных решений.", footer_text: "Премиальные Корпоративные Решения"
             },
             uz: {
-                nav_home: "Asosiy", nav_about: "Men haqimda", nav_skills: "Ko'nikmalar", nav_work: "Loyihalar", nav_contact: "Aloqa",
-                hero_subtitle: "&lt;Salom Dunyo /&gt;", hero_im: "Men", 
-                hero_desc: "Professional 1C Dasturchiman. Biznes jarayonlarini avtomatlashtirish va integratsiyalar bo'yicha mutaxassisman.",
-                btn_contact: "Bog'lanish", hero_code_text: "1C:Enterprise 8.3",
-                title_about: "Men Haqimda", about_h3: "Mas'uliyatli va sifatli dasturlash",
-                about_p1: "Men 1C platformasiga ixtisoslashganman. Maqsadim - toza va ishonchli kod yozish orqali biznesni optimallashtirish.",
-                about_p2: "Har bir loyihada mijozning biznes mantiqini hurmat qilaman. Murakkab СКД hisobotlarini yozish yoki API integratsiyalarida tizimning barqarorligini birinchi o'ringa qo'yaman.",
-                stat_exp: "Yillik tajriba", stat_proj: "Tugallangan loyihalar",
-                title_skills: "Ko'nikmalar",
-                skill_1_title: "1C Arxitekturasi", skill_1_desc: "Ma'lumotlar bazasini loyihalash, noldan konfiguratsiyalar yaratish va o'zgartirish.",
-                skill_2_title: "СКД va Hisobotlar", skill_2_desc: "Optimallashtirilgan so'rovlar yozish va murakkab analitik hisobotlarni yaratish.",
-                skill_3_title: "API va Integratsiyalar", skill_3_desc: "REST API va OData orqali 1C ni veb-saytlar va CRM tizimlariga ulash.",
-                skill_4_title: "Kengaytmalar", skill_4_desc: "Asosiy konfiguratsiyani o'zgartirmasdan standart 1C funksiyalarini moslashtirish.",
-                title_work: "So'nggi Loyihalar",
-                proj_1_title: "E-commerce Integratsiyasi", proj_1_desc: "1C:UT ni WooCommerce sayti bilan sinxronlashtirish uchun REST API.",
-                proj_2_title: "Ishlab chiqarish moduli", proj_2_desc: "Xom ashyo narxini hisoblash va ishlab chiqarishni avtomatlashtirish uchun kengaytma.",
-                proj_3_title: "Telegram Bot", proj_3_desc: "1C bazasi bilan integratsiyalashgan Telegram bot yaratildi.",
-                title_contact: "Bog'lanish", contact_h3: "Biznesingizni optimallashtirishga tayyormisiz?",
-                contact_p: "Men har doim yangi loyihalar va ma'lumotlar bazasi arxitekturasini muhokama qilishga tayyorman.",
-                footer_text: "Professional 1C Dasturchisi"
+                nav_home: "Asosiy", nav_team: "Jamoa", nav_skills: "Ekspertiza", nav_work: "Loyihalar", nav_contact: "Aloqa",
+                hero_subtitle: "Korporativ IT Yechimlar", hero_we: "Oliy Toifali", hero_desc: "Zamonaviy korxonalar uchun kompleks avtomatlashtirish, ilg'or Python integratsiyalari va yuqori darajadagi biznes tizimlari arxitekturasini taqdim etamiz.", btn_contact: "Hamkorlik Qilish", hero_code_text: "Tizimli Integratsiyalar",
+                title_team: "Jamoamiz",
+                abror_role: "Tizim Arxitektori va 1C Muhandisi", abror_bio: "1C:Korxona platformasi va IT arxitektura bo'yicha mutaxassis. Asosiy maqsadim – korxonalarning hisob-kitob va boshqaruv jarayonlarini mustahkam, barqaror va xavfsiz tizimlar orqali mukammallashtirish.",
+                murodxoja_role: "Biznes Tahlilchisi va 1C Muhandisi", murodxoja_bio: "1C:Korxona 8, MS SQL va murakkab biznes jarayonlarini tahlil qilish bo'yicha chuqur tajribaga ega mutaxassis. Hozirda 'TOSHSHAHARTRANSXIZMAT' AJ korporativ infratuzilmasini rivojlantirmoqda. Yeoju texnika instituti bitiruvchisi.",
+                title_skills: "Ekspertiza va Texnologiyalar",
+                skill_1_title: "1C:Korxona (Enterprise)", skill_1_desc: "Keng ko'lamli korporativ konfiguratsiyalarni loyihalash, moslashtirish va integratsiya qilish.",
+                skill_2_title: "ERP va Biznes Tizimlari", skill_2_desc: "Korxona resurslarini boshqarish bo'yicha murakkab me'moriy yechimlarni joriy etish.",
+                skill_3_title: "Python Avtomatizatsiyasi", skill_3_desc: "Python yordamida chuqur tahliliy jarayonlarni avtomatlashtirish va biznes mantiqini yaratish.",
+                skill_4_title: "Web va API Arxitekturasi", skill_4_desc: "Zamonaviy korporativ veb-ilovalar va yuqori yuklamali RESTful API xizmatlarini yaratish.",
+                skill_5_title: "Tizimli Integratsiyalar", skill_5_desc: "Turli xil platformalarni yagona ekotizimga birlashtirish va xavfsiz ma'lumotlar oqimini ta'minlash.",
+                skill_6_title: "Logistika va Omborxona", skill_6_desc: "Shtrix-kod tizimlari, mobil terminallar va ta'minot zanjiri jarayonlarini raqamlashtirish.",
+                title_work: "Amalga Oshirilgan Loyihalar", badge_problem: "BIZNES MUAMMO", badge_solution: "KORPORATIV YECHIM",
+                proj_1_title: "ERP Tizimi Integratsiyasi", proj_1_prob: "Ishlab chiqarish kompaniyasiga 1C va tashqi omborni boshqarish tizimi (WMS) o'rtasida uzluksiz sinxronizatsiya zarur edi.", proj_1_sol: "Avtomatlashtirilgan ma'lumotlar almashinuvi, xatoliklarni boshqarish va monitoring paneliga ega maxsus integratsiya moduli ishlab chiqildi.",
+                proj_2_title: "Ombor Avtomatizatsiyasi", proj_2_prob: "Chakana savdo tarmog'ida tovarlarni qo'lda kuzatish qiyinlashib, ombordagi qoldiqlar bo'yicha tez-tez tafovutlar yuzaga kelgan.", proj_2_sol: "Mobil skanerlash, real vaqtda yangilash va tahliliy hisobotlarni o'z ichiga olgan shtrix-kod kuzatuv tizimi joriy etildi.",
+                proj_3_title: "Korporativ Jarayonlar", proj_3_prob: "Distribyutorlik kompaniyasi ma'lumotlarni kiritish va hisobotlarni shakllantirish uchun har kuni samarasiz vaqt sarflar edi.", proj_3_sol: "Hujjatlarni qayta ishlash, tekshirish va rejalashtirilgan hisobotlarni yaratish bo'yicha to'liq avtomatlashtirilgan tizim yaratildi.",
+                proj_4_title: "CRM Tizimini Moslashtirish", proj_4_prob: "Savdo bo'limiga standart echimlarda mavjud bo'lmagan, maxsus tahliliy CRM xususiyatlari talab etilardi.", proj_4_sol: "Mijozlarni boshqarish va tahlil qilish uchun maxsus modullar yordamida mavjud CRM tizimi muvaffaqiyatli kengaytirildi.",
+                title_contact: "Hamkorlik Qilish", contact_h3: "Biznesingizni Yangi Bosqichga Olib Chiqing", contact_p: "Biz doimo yuqori darajadagi ma'lumotlar bazasi arxitekturasi, murakkab integratsiyalar va korporativ yechimlarni muhokama qilishga tayyormiz.", footer_text: "Premium Korporativ Yechimlar"
             }
         };
 
-        const typingPhrases = {
-            en: ["build 1C Configurations", "integrate APIs", "write complex Queries", "optimize Businesses"],
-            ru: ["разрабатываю в 1С", "настраиваю Интеграции", "пишу запросы в СКД", "автоматизирую Бизнес"],
-            uz: ["1C bazalar yarataman", "API integratsiya qilaman", "murakkab hisobotlar tuzaman", "biznesni avtomatlashtiraman"]
+        const typingPhrases = { 
+            en: ["Architecting 1C Ecosystems", "Developing Python APIs", "Automating Enterprise Workflows"], 
+            ru: ["Архитектура экосистем 1С", "Разработка Python API", "Автоматизация бизнес-процессов"], 
+            uz: ["1C ekotizimlarini yaratish", "Python API integratsiyasi", "Korporativ jarayonlarni avtomatlashtirish"] 
         };
-
-        let currentLang = 'en';
+        
+        let currentLang = 'uz';
 
         function setLanguage(lang) {
             currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
+                if (translations[lang][key]) el.innerHTML = translations[lang][key];
             });
-            clearTimeout(typeTimeout);
-            typePhraseIndex = 0;
-            charIndex = 0;
-            isDeleting = false;        // Force it to type, not delete
-            typingElement.textContent = ""; // Instantly clear the old word
-            
-            typeEffect();
+            clearTimeout(typeTimeout); typePhraseIndex = 0; charIndex = 0; isDeleting = false; 
+            typingElement.textContent = ""; typeEffect(); 
         }
 
-        /* --- 5. TYPING EFFECT LOGIC --- */
         const typingElement = document.getElementById("typing-text");
-        let typePhraseIndex = 0; let charIndex = 0; let isDeleting = false; let typeTimeout;
+        let typePhraseIndex = 0, charIndex = 0, isDeleting = false, typeTimeout;
 
         function typeEffect() {
-            const phrases = typingPhrases[currentLang];
-            const currentPhrase = phrases[typePhraseIndex];
-
-            if (isDeleting) {
-                typingElement.textContent = currentPhrase.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typingElement.textContent = currentPhrase.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            let typingSpeed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && charIndex === currentPhrase.length) {
-                typingSpeed = 2000;
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                typePhraseIndex = (typePhraseIndex + 1) % phrases.length;
-                typingSpeed = 500;
-            }
-            typeTimeout = setTimeout(typeEffect, typingSpeed);
+            const currentPhrase = typingPhrases[currentLang][typePhraseIndex];
+            if (isDeleting) { typingElement.textContent = currentPhrase.substring(0, charIndex - 1); charIndex--; } 
+            else { typingElement.textContent = currentPhrase.substring(0, charIndex + 1); charIndex++; }
+            let speed = isDeleting ? 30 : 60; 
+            if (!isDeleting && charIndex === currentPhrase.length) { speed = 2500; isDeleting = true; } 
+            else if (isDeleting && charIndex === 0) { isDeleting = false; typePhraseIndex = (typePhraseIndex + 1) % typingPhrases[currentLang].length; speed = 500; }
+            typeTimeout = setTimeout(typeEffect, speed);
         }
-        setTimeout(typeEffect, 1000);
+        
+        typeTimeout = setTimeout(typeEffect, 1000);
+        setLanguage('uz');
     </script>
 </body>
 </html>
